@@ -20,10 +20,6 @@ func NewLocalRepositoryFromURL(remote *url.URL) *LocalRepository {
 		panic(err)
 	}
 
-	if root == "" {
-		println("hgoe")
-	}
-
 	return &LocalRepository{
 		path.Join(root, relPath),
 		relPath,
