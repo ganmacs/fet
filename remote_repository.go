@@ -35,8 +35,8 @@ func (remote *GitHubRepository) isValid() bool {
 func (remote *GitHubRepository) GetRepositroy() {
 	remoteURL := remote.URL()
 	vcs := remote.VCS()
-	vcs.Clone(remoteURL, ".")
-	// local := NewLocalRepositoryFromURL(remote)
+	local := NewLocalRepositoryFromURL(remoteURL)
+	vcs.Clone(remoteURL, local.FullPath)
 }
 
 func NewRemoteRepository(url *url.URL) (RemoteRepository, error) {

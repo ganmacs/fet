@@ -2,6 +2,8 @@ package main
 
 import (
 	"net/url"
+	"path"
+	"strings"
 )
 
 type LocalRepository struct {
@@ -10,9 +12,20 @@ type LocalRepository struct {
 }
 
 func NewLocalRepositoryFromURL(remote *url.URL) *LocalRepository {
-	return nil
-}
+	pathParts := append([]string{remote.Host}, strings.Split(remote.Path, "/")...)
+	relPath := strings.TrimSuffix(path.Join(pathParts...), ".git")
 
-func localRepositoryRoots(args) {
+	root, err := GitConfigSingle("ghq.root")
+	if err != nil {
+		panic(err)
+	}
 
+	if root == "" {
+		println("hgoe")
+	}
+
+	return &LocalRepository{
+		path.Join(root, relPath),
+		relPath,
+	}
 }
