@@ -12,6 +12,7 @@ import (
 var Commands = []cli.Command{
 	GetCommand,
 	LookCommand,
+	ListCommand,
 }
 
 var GetCommand = cli.Command{
@@ -26,6 +27,16 @@ var LookCommand = cli.Command{
 	Usage:       "look into a local repository",
 	Description: "this is desc",
 	Action:      doLookCommand,
+}
+
+var ListCommand = cli.Command{
+	Name:        "list",
+	Usage:       "list all local repostory",
+	Description: "this is desc",
+	Action:      doListCommand,
+	Flags: []cli.Flag{
+		cli.BoolFlag{Name: "full-path, p", Usage: "Print full paths"},
+	},
 }
 
 func doGetCommand(c *cli.Context) {
@@ -78,5 +89,26 @@ func doLookCommand(c *cli.Context) {
 	default:
 		fmt.Println("not invalid")
 		return
+	}
+}
+
+func doListCommand(c *cli.Context) {
+	isFullPath := c.Bool("full-path")
+
+	repos := []*LocalRepository{}
+	err := WalkLocalRepositories(func(repo *LocalRepository) {
+		repos = append(repos, repo)
+	})
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	for _, r := range repos {
+		if isFullPath {
+			fmt.Println(r.FullPath)
+		} else {
+			fmt.Println(r.RelPath)
+		}
 	}
 }
