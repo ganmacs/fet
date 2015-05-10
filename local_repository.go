@@ -75,7 +75,12 @@ func NewLocalRepositoryFromFullPath(fullPath string) (*LocalRepository, error) {
 	}, nil
 }
 
-func WalkLocalRepositories(root string, callback func(*LocalRepository)) error {
+func WalkLocalRepositories(callback func(*LocalRepository)) error {
+	root, err := GitConfigSingle("ghq.root")
+	if err != nil {
+		panic(err)
+	}
+
 	return filepath.Walk(root, func(fullPath string, fileInfo os.FileInfo, err error) error {
 		if fileInfo == nil || !fileInfo.IsDir() {
 			return nil

@@ -51,13 +51,8 @@ func doGetCommand(c *cli.Context) {
 func doLookCommand(c *cli.Context) {
 	relPath := c.Args().Get(0)
 
-	root, err := GitConfigSingle("ghq.root")
-	if err != nil {
-		panic(err)
-	}
-
 	foundedRepo := []*LocalRepository{}
-	err = WalkLocalRepositories(root, func(repo *LocalRepository) {
+	err := WalkLocalRepositories(func(repo *LocalRepository) {
 		if repo.Match(relPath) {
 			foundedRepo = append(foundedRepo, repo)
 		}
